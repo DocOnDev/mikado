@@ -8,24 +8,66 @@ describe GildedRose do
     let(:quality) {20}
     let(:sell_in) {20}
     let(:price) {40}
+    let(:item) {Item.new(name, sell_in, quality, price)}
 
+    # Standard Items
     context "given Standard Item" do
-      let(:item) {Item.new("standard", sell_in, quality, price)}
-
+      let(:name) {"Standard"}
       context "with Quality above minimum" do
         it "does decrease the Sell In by 1" do
           expect(item.sell_in).to eq sell_in - 1
         end
-        context "and on or before Sell Date" do
+        context "and before Sell Date" do
           it "does decrease Quality by 1" do
             expect(item.quality).to eq quality - 1
           end
         end
         context "and on or after Sell Date" do
           let(:sell_in) {0}
-          it "does decrease quality by 2" do
+          it "does decrease Quality by 2" do
             expect(item.quality).to eq quality - 2
           end
+        end
+      end
+
+      context "with Quality at minimum" do
+        let(:quality) {0}
+        it "does not decrease Quality" do
+          expect(item.quality).to eq 0
+        end
+      end
+    end
+
+    # Aged Items
+    context "given an Aged Item" do
+      let(:name) {"Aged Brie"}
+      it "does decrease the Sell In by 1" do
+        expect(item.sell_in).to eq sell_in - 1
+      end
+      context "with Quality less than maximum" do
+        context "and before Sell Date" do
+          it "does increase Quality by one" do
+            expect(item.quality).to eq quality + 1
+          end
+        end
+        context "and on or after Sell Date" do
+          let(:sell_in) {-1}
+          it "does increase Quality by two" do
+            expect(item.quality).to eq quality + 2
+          end
+          context "and near maximum Quality" do
+            let(:quality) {49}
+            it "does not let Quality exceed maximum" do
+              expect(item.quality).to eq 50
+            end
+          end
+        end
+      end
+
+      context "with Quality at maximum" do
+        let(:quality) {50}
+        it "does not increase Quality" do
+          expect(item.quality).to eq quality
         end
       end
     end
