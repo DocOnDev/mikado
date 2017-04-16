@@ -147,5 +147,28 @@ describe GildedRose do
         end
       end
     end
+
+    context "given Multiple Items" do
+      let(:gr) {GildedRose.new(items)}
+      let(:items) {
+        [
+          Item.new("Standard", sell_in, quality, price),
+          Item.new("Aged Brie", sell_in, quality, price)
+        ]
+      }
+
+      it "does reduce normal quality" do
+        expect(items[0].quality).to eq quality - 1
+      end
+      it "does reduce normal sell in" do
+        expect(items[0].sell_in).to eq sell_in - 1
+      end
+      it "does increase aged quality" do
+        expect(items[1].quality).to eq quality + 1
+      end
+      it "does reduce aged sell in" do
+        expect(items[1].sell_in).to eq sell_in - 1
+      end
+    end
   end
 end
