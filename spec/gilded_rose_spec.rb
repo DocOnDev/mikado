@@ -33,6 +33,10 @@ describe GildedRose do
           it "does adjust the Price by double the days past Sell Date" do
             expect(gr.total).to eq item.base_price + item.sell_in * 2
           end
+
+          it "*** increases Price by Quality" do
+            expect(gr.total).to eq item.base_price + item.quality
+          end
         end
 
         context "With Quality at minimum" do
@@ -76,6 +80,9 @@ describe GildedRose do
             it "does not let Quality exceed maximum" do
               expect(item.quality).to eq 50
             end
+          end
+          it "*** Decreases price by twice Sell In Days" do
+            expect(gr.total).to eq item.base_price + item.sell_in * 2
           end
         end
       end
@@ -196,6 +203,10 @@ describe GildedRose do
       it "does reduce aged sell in" do
         expect(items[1].sell_in).to eq sell_in - 1
       end
+    end
+
+    context "Given an Aged Item" do
+      let(:item) {Item.new("Aged Brie", sell_in, quality, 200) }
     end
   end
 end
