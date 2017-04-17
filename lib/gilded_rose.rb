@@ -60,7 +60,7 @@ class GildedRose
     total
   end
 
-private
+  private
 
   def price(item)
     price = item.base_price

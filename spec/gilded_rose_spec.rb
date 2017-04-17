@@ -3,7 +3,6 @@ require File.join('./lib', 'gilded_rose')
 describe GildedRose do
 
   describe "#update_quality" do
-<<<<<<< HEAD
     before(:each) { gr.update_quality }
     let(:gr) {GildedRose.new([item])}
     let(:quality) {20}
@@ -33,6 +32,13 @@ describe GildedRose do
           end
           it "does adjust the Price by double the days past Sell Date" do
             expect(gr.total).to eq item.base_price + item.sell_in * 2
+          end
+        end
+
+        context "With Quality at minimum" do
+          let(:quality) { 0 }
+          it "*** does not adjust quality" do
+            expect(item.quality).to eq quality
           end
         end
       end
