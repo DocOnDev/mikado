@@ -3,6 +3,7 @@ require File.join('./lib', 'gilded_rose')
 describe GildedRose do
 
   describe "#update_quality" do
+<<<<<<< HEAD
     before(:each) { gr.update_quality }
     let(:gr) {GildedRose.new([item])}
     let(:quality) {20}
