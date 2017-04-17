@@ -103,6 +103,12 @@ describe GildedRose do
           expect(item.quality).to eq quality
         end
       end
+      context "with Quality near maximum" do
+        let(:quality) {49}
+        it "*** doesn't increase Quality above maximum" do
+          expect(item.quality).to eq 50
+        end
+      end
 
       context "with Quality less than maximum" do
         context "and long before Sell Date" do
@@ -122,6 +128,12 @@ describe GildedRose do
           it "*** adjusts the Price by twice the Quality" do
             expect(gr.total).to eq item.base_price + item.quality * 2
           end
+          context "and Quality near maximum" do
+            let(:quality) {49}
+            it "*** doesn't increase Quality above maximum" do
+              expect(item.quality).to eq 50
+            end
+          end
         end
         context "and very near Sell Date" do
           let(:sell_in) {4}
@@ -130,6 +142,12 @@ describe GildedRose do
           end
           it "*** adjusts the Price by triple the Quality" do
             expect(gr.total).to eq item.base_price + item.quality * 3
+          end
+          context "and Quality near maximum" do
+            let(:quality) {49}
+            it "*** doesn't increase Quality above maximum" do
+              expect(item.quality).to eq 50
+            end
           end
         end
         context "and on Sell Date" do
