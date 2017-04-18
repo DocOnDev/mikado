@@ -1,10 +1,9 @@
-class GildedRose
-
-  def initialize(items)
-    @items = items
+class Standard
+  def initialize item
+    @item = item
   end
 
-  def standard_update
+  def update
     @item.sell_in -= 1
     @item.quality -= 1
 
@@ -13,6 +12,18 @@ class GildedRose
     end
 
     @item.quality = 0 if @item.quality < 0
+  end
+end
+
+class GildedRose
+
+  def initialize(items)
+    @items = items
+  end
+
+  def standard_update
+    type = Standard.new @item
+    type.update
   end
 
   def aged_update
