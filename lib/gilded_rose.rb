@@ -1,10 +1,15 @@
-class Standard
+class ItemType
   def initialize item
     @item = item
   end
-
   def update
     @item.sell_in -= 1
+  end
+end
+
+class Standard < ItemType
+  def update
+    super
     @item.quality -= 1
 
     if @item.sell_in <= 0
@@ -15,13 +20,9 @@ class Standard
   end
 end
 
-class Aged
-  def initialize item
-    @item = item
-  end
-
+class Aged < ItemType
   def update
-    @item.sell_in -= 1
+    super
     @item.quality += 1
 
     if @item.sell_in <= 0
@@ -32,22 +33,14 @@ class Aged
   end
 end
 
-class Legend
-  def initialize item
-    @item = item
-  end
-
+class Legend < ItemType
   def update
   end
 end
 
-class Passes
-  def initialize item
-    @item = item
-  end
-
+class Passes < ItemType
   def update
-    @item.sell_in -= 1
+    super
 
     return @item.quality = 0 if @item.sell_in <= 0
 
