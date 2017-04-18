@@ -15,18 +15,12 @@ class Standard
   end
 end
 
-class GildedRose
-
-  def initialize(items)
-    @items = items
+class Aged
+  def initialize item
+    @item = item
   end
 
-  def standard_update
-    type = Standard.new @item
-    type.update
-  end
-
-  def aged_update
+  def update
     @item.sell_in -= 1
     @item.quality += 1
 
@@ -36,11 +30,23 @@ class GildedRose
 
     @item.quality = 50 if @item.quality > 50
   end
+end
 
-  def legend_update
+class Legend
+  def initialize item
+    @item = item
   end
 
-  def passes_update
+  def update
+  end
+end
+
+class Passes
+  def initialize item
+    @item = item
+  end
+
+  def update
     @item.sell_in -= 1
 
     return @item.quality = 0 if @item.sell_in <= 0
@@ -56,21 +62,29 @@ class GildedRose
 
     @item.quality = 50 if @item.quality > 50
   end
+end
 
+
+class GildedRose
+
+  def initialize(items)
+    @items = items
+  end
 
   def update_quality()
     @items.each do |item|
       @item = item
       case @item.name
       when "Aged Brie"
-        aged_update
+        type = Aged.new @item
       when "Sulfuras, Hand of Ragnaros"
-        legend_update
+        type = Legend.new @item
       when "Backstage passes to a TAFKAL80ETC concert"
-        passes_update
+        type = Passes.new @item
       else
-        standard_update
+        type = Standard.new @item
       end
+      type.update
     end
   end
 
