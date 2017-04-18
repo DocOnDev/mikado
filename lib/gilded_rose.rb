@@ -5,15 +5,14 @@ class GildedRose
   end
 
   def standard_update
-    @item.sell_in -= 1 if @item.quality > 0
-    if @item.quality > 0
-      if @item.sell_in > 0
-        @item.quality -= 1
-      end
-      if @item.sell_in <= 0
-        @item.quality -= 2
-      end
+    @item.sell_in -= 1
+    @item.quality -= 1
+
+    if @item.sell_in <= 0
+      @item.quality -= 1
     end
+
+    @item.quality = 0 if @item.quality < 0
   end
 
   def update_quality()
