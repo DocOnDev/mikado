@@ -1,30 +1,16 @@
 # Gilded Rose is the original class we inherited. Manages the quality and total.
 class GildedRose
-  ITEM_TYPES = [
-     [/^Sulfuras, Hand of Ragnaros$/, "Legend"],
-     [/^Aged Brie$/, "Aged"],
-     [/^Backstage passes to a TAFKAL80ETC concert$/, "Passes"],
-     [/^Conjured$/, "Conjured"],
-   ]
-
   def initialize(items)
     @items = items
   end
 
   def update_quality()
-    @items.each { |item| updater_for(item).update }
-  end
-
-  def updater_for(item)
-    pair = ITEM_TYPES.detect { |re, handler| re =~ item.name }
-    handler = pair ? pair[1] : "Standard"
-
-    Object::const_get(handler).new(item)
+    @items.each { |item| DetermineType.for(item).update }
   end
 
   def total()
     total = 0
-    @items.each { |item| total += updater_for(item).price }
+    @items.each { |item| total += DetermineType.for(item).price }
     total
   end
 
@@ -44,6 +30,24 @@ class Item
 
   def to_s()
     "Name: #{@name}, Sell In: #{@sell_in}, Quality: #{@quality}, Base Price: #{@base_price}"
+  end
+end
+
+# Factory Class to determine proper item type
+class DetermineType
+  ITEM_TYPES = [
+     [/^Sulfuras, Hand of Ragnaros$/, "Legend"],
+     [/^Aged Brie$/, "Aged"],
+     [/^Backstage passes to a TAFKAL80ETC concert$/, "Passes"],
+     [/^Conjured$/, "Conjured"],
+   ]
+
+
+  def self.for(item)
+    pair = ITEM_TYPES.detect { |re, handler| re =~ item.name }
+    handler = pair ? pair[1] : "Standard"
+
+    return Object::const_get(handler).new(item)
   end
 end
 
