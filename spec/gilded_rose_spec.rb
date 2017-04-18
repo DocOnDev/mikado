@@ -169,29 +169,29 @@ describe GildedRose do
     context "given a Legendary Item" do
       let(:name){"Sulfuras, Hand of Ragnaros"}
 
-      context "with Initial Quality of 30" do
+      context "with Initial Quality other than 80" do
         let(:quality) {30}
-        it "** maintains a quality of 30" do
-          expect(item.quality).to eq 30
+        it "maintains a quality of 80" do
+          expect(item.quality).to eq 80
         end
       end
 
       context "before Sell Date" do
         let(:sell_in) {20}
-        it "doesn't change quality" do
-          expect(item.quality).to eq quality
+        it "maintains a quality of 80" do
+          expect(item.quality).to eq 80
         end
       end
       context "on Sell Date" do
         let(:sell_in) {0}
-        it "doesn't change quality" do
-          expect(item.quality).to eq quality
+        it "maintains a quality of 80" do
+          expect(item.quality).to eq 80
         end
       end
       context "after Sell Date" do
         let(:sell_in) {-2}
-        it "doesn't change quality" do
-          expect(item.quality).to eq quality
+        it "maintains a quality of 80" do
+          expect(item.quality).to eq 80
         end
       end
     end

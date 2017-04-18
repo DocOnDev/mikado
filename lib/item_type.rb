@@ -56,6 +56,7 @@ end
 # Legend Item Type
 class Legend < ItemType
   def update
+    @item.quality = 80
   end
 end
 
