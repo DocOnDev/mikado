@@ -1,3 +1,4 @@
+# Gilded Rose is the original class we inherited. Manages the quality and total.
 class GildedRose
   ITEM_TYPES = [
      [/^Sulfuras, Hand of Ragnaros$/, "Legend"],
@@ -29,8 +30,10 @@ class GildedRose
 
 end
 
+# Item Class - not to be touched.
 class Item
-  attr_accessor :name, :sell_in, :quality, :base_price
+  attr_reader :name, :base_price
+  attr_accessor :sell_in, :quality
 
   def initialize(name, sell_in, quality, base_price=10)
     @name = name
@@ -44,9 +47,11 @@ class Item
   end
 end
 
+# Item Type - Manages actual quality adjustment and price for items
 class ItemType
   def initialize item
     @item = item
+    @price = item.base_price
   end
 
   def update
@@ -62,29 +67,17 @@ class ItemType
   end
 
   def price
-    price = @item.base_price
-    if @item.sell_in > 0
-      if @item.name != "Backstage passes to a TAFKAL80ETC concert"
-        price += @item.quality
-      else
-        price += @item.quality
-        if @item.sell_in < 11
-          price += @item.quality
-          if @item.sell_in < 6
-            price += @item.quality
-          end
-        end
-      end
-    else
-      price += (@item.sell_in * 2)
-    end
-    price = 0 if price < 0
+    return @price += @item.quality if @item.sell_in > 0
 
-    price
+    @price += (@item.sell_in * 2)
+    @price = 0 if @price < 0
+
+    @price
   end
 
 end
 
+# Standard Item Type
 class Standard < ItemType
   def update
     super
@@ -92,6 +85,7 @@ class Standard < ItemType
   end
 end
 
+# Conjured Item Type
 class Conjured < ItemType
   def update
     super
@@ -99,6 +93,7 @@ class Conjured < ItemType
   end
 end
 
+# Aged Item Type
 class Aged < ItemType
   def update
     super
@@ -106,11 +101,13 @@ class Aged < ItemType
   end
 end
 
+# Legend Item Type
 class Legend < ItemType
   def update
   end
 end
 
+# PAsses Item Type
 class Passes < ItemType
   def update
     super
@@ -120,5 +117,15 @@ class Passes < ItemType
     adjust_quality(1) if @item.sell_in > 10
     adjust_quality(2) if @item.sell_in.between?(6, 10)
     adjust_quality(3) if @item.sell_in.between?(1, 5)
+  end
+
+  def price
+    super
+    return @price if @item.sell_in <= 0
+
+    @price += @item.quality if @item.sell_in.between?(6, 10)
+    @price += @item.quality * 2 if @item.sell_in.between?(1, 5)
+
+    @price
   end
 end
