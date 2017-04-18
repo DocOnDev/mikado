@@ -23,32 +23,8 @@ class GildedRose
 
   def total()
     total = 0
-    @items.each { |item| total += price(item) }
+    @items.each { |item| total += updater_for(item).price }
     total
-  end
-
-  private
-
-  def price(item)
-    price = item.base_price
-    if item.sell_in > 0
-      if item.name != "Backstage passes to a TAFKAL80ETC concert"
-        price += item.quality
-      else
-        price += item.quality
-        if item.sell_in < 11
-          price += item.quality
-          if item.sell_in < 6
-            price += item.quality
-          end
-        end
-      end
-    else
-      price += (item.sell_in * 2)
-    end
-    price = 0 if price < 0
-
-    price
   end
 
 end
@@ -77,33 +53,56 @@ class ItemType
     @item.sell_in -= 1
   end
 
-  def adjust_quality(item, amount)
-    item.quality += amount
-    item.quality += amount if item.sell_in <= 0
+  def adjust_quality(amount)
+    @item.quality += amount
+    @item.quality += amount if @item.sell_in <= 0
 
-    item.quality = 50 if item.quality > 50
-    item.quality = 0 if item.quality < 0
+    @item.quality = 50 if @item.quality > 50
+    @item.quality = 0 if @item.quality < 0
   end
+
+  def price
+    price = @item.base_price
+    if @item.sell_in > 0
+      if @item.name != "Backstage passes to a TAFKAL80ETC concert"
+        price += @item.quality
+      else
+        price += @item.quality
+        if @item.sell_in < 11
+          price += @item.quality
+          if @item.sell_in < 6
+            price += @item.quality
+          end
+        end
+      end
+    else
+      price += (@item.sell_in * 2)
+    end
+    price = 0 if price < 0
+
+    price
+  end
+
 end
 
 class Standard < ItemType
   def update
     super
-    adjust_quality(@item, -1)
+    adjust_quality(-1)
   end
 end
 
 class Conjured < ItemType
   def update
     super
-    adjust_quality(@item, -2)
+    adjust_quality(-2)
   end
 end
 
 class Aged < ItemType
   def update
     super
-    adjust_quality(@item, 1)
+    adjust_quality(1)
   end
 end
 
@@ -118,8 +117,8 @@ class Passes < ItemType
 
     return @item.quality = 0 if @item.sell_in <= 0
 
-    adjust_quality(@item, 1) if @item.sell_in > 10
-    adjust_quality(@item, 2) if @item.sell_in.between?(6, 10)
-    adjust_quality(@item, 3) if @item.sell_in.between?(1, 5)
+    adjust_quality(1) if @item.sell_in > 10
+    adjust_quality(2) if @item.sell_in.between?(6, 10)
+    adjust_quality(3) if @item.sell_in.between?(1, 5)
   end
 end
