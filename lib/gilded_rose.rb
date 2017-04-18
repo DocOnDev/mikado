@@ -20,6 +20,19 @@ class Standard < ItemType
   end
 end
 
+class Conjured < ItemType
+  def update
+    super
+    @item.quality -= 2
+
+    if @item.sell_in <= 0
+      @item.quality -= 2
+    end
+
+    @item.quality = 0 if @item.quality < 0
+  end
+end
+
 class Aged < ItemType
   def update
     super
@@ -74,6 +87,8 @@ class GildedRose
         type = Legend.new @item
       when "Backstage passes to a TAFKAL80ETC concert"
         type = Passes.new @item
+      when "Conjured"
+        type = Conjured.new @item
       else
         type = Standard.new @item
       end

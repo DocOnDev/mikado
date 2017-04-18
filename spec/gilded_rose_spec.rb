@@ -196,6 +196,7 @@ describe GildedRose do
       end
     end
 
+    # Multiple Items
     context "given Multiple Items" do
       let(:gr) {GildedRose.new(items)}
       let(:items) {
@@ -216,6 +217,26 @@ describe GildedRose do
       end
       it "reduces aged sell in" do
         expect(items[1].sell_in).to eq sell_in - 1
+      end
+    end
+
+    context "given Conjured Items" do
+      let(:name){"Conjured"}
+      context "with Quality above minimum" do
+        it "decreases the Sell In by 1" do
+          expect(item.sell_in).to eq sell_in - 1
+        end
+        context "and before Sell Date" do
+          it "decreases Quality by 2" do
+            expect(item.quality).to eq quality - 2
+          end
+        end
+        context "and on or after Sell Date" do
+          let(:sell_in) {0}
+          it "decreases Quality by 4" do
+            expect(item.quality).to eq quality - 4
+          end
+        end
       end
     end
   end
